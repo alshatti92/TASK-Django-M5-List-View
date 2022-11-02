@@ -1,3 +1,4 @@
+from urllib import response
 from django.shortcuts import render
 from rest_framework.generics import CreateAPIView
 from .serializer import UserCreateSeriliazer, UserLoginSerializer
@@ -19,4 +20,5 @@ class UserLoginAPIView(APIView):
 
         if serializer.is_valid(raise_exception=True):
             valid_data = serializer.data
-            
+            return response(valid_data, status=HTTP_200_OK)
+        return response(serializer.errors, HTTP_400_BAD_REQUEST)

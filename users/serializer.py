@@ -34,6 +34,6 @@ class UserLoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("if you forgot your username how you will remember your password !!")
 
         if not username.check_password(password):
-            raise serializers.ValidationError("we didn't learn forgot password code, HAPPY ???")
+            raise serializers.ValidationError("we didn't learn hot to retreive password, HAPPY ???")
 
         return data
