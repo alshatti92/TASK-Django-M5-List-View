@@ -1,13 +1,18 @@
-from re import T
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
 
+
 class UserCreateSeriliazer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    author = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = User
         fields = ["username", "password", "first_name", "last_name"]
+
+    
 
     def create(self, validated_data):
         # username = validated_data["username"]
@@ -24,6 +29,8 @@ class UserLoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
+    token = serializers.CharField(allow_blank=True , read_only=True)
+
     def validate(self, data):
         username = data.get("username")
         password = data.get("password")
@@ -36,4 +43,9 @@ class UserLoginSerializer(serializers.Serializer):
         if not username.check_password(password):
             raise serializers.ValidationError("we didn't learn hot to retreive password, HAPPY ???")
 
+
+        payload = RefreshToken.for_user(username)
+        token = str(payload.access_token)
+
+        data["token"] = token
         return data

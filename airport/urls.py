@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from flights.views import FlightsListViews, BookingsListViews, BookingDetailsViews
-from users.views import UserCreateAPIView, UserLoginAPIView
+from users.views import UserCreateAPIView, UserLoginAPIView, BookingCreateAPIView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -28,6 +28,7 @@ urlpatterns = [
 
     path("create/", UserCreateAPIView.as_view(), name="create"),
     path("login/", UserLoginAPIView.as_view(), name="login"),
+    path("book-flight/", BookingCreateAPIView.as_view(), name="book-flight"),
 
 
 ]
