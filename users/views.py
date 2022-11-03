@@ -1,6 +1,6 @@
-from urllib import response
 from django.shortcuts import render
 from rest_framework.generics import CreateAPIView
+from flights.models import Flight
 
 from flights.serializer import BookingCreateSerializer
 from .serializer import UserCreateSeriliazer, UserLoginSerializer
@@ -16,18 +16,27 @@ class UserCreateAPIView(CreateAPIView):
 
 class UserLoginAPIView(APIView):
     serializer_class = UserLoginSerializer
-    permission_classes = [AllowAny]
 
     def post(self, request):
         data = request.data
         serializer = UserLoginSerializer(data=data)
-
         if serializer.is_valid(raise_exception=True):
             valid_data = serializer.data
-            return response(valid_data, status=HTTP_200_OK)
-        return response(serializer.errors, HTTP_400_BAD_REQUEST)
+            return Response(valid_data, status=HTTP_200_OK)
+        return Response(serializer.errors, HTTP_400_BAD_REQUEST)
 
 
 class BookingCreateAPIView(CreateAPIView):
     serializer_class = BookingCreateSerializer
+    
+
+    def perform_create(self, serializer):
+        flight_id = self.kwargs['flight_id']
+        flight = Flight.objects.get(id=flight_id)
+        serializer.save(user=self.request.user, flight=flight)
+       
+
+        print(flight)
+
+        
    
